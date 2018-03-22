@@ -455,5 +455,81 @@ for语句的初始化部分不应当有变量声明。
     }
 
     //不好的写法：初始化时声明变量
-    
+    for (var prop in object) {
+        //code
+    }
+当使用for-in语句时，记得使用hasOwnProperty()进行双重检查来过滤对象的成员。
+#### **while 语句**
+while 类的语句应当是下面的格式。
 
+    while (condition) {
+        statement
+    }
+#### **do 语句**
+do 类的语句应当是下面的格式。
+
+    do {
+        statements
+    } while (condition);
+#### **switch 语句**
+switch 类的语句应当是如下格式。
+
+    switch (expression) {
+        case expression:
+            statements
+        
+        default:
+            statements
+    }
+switch下的第一个case都应当保持一个缩进。除了第一个之外包括default在内的每一个case都应当在之前保持一个空行。
+每一组语句（除了default）都应当以break、return、throw结尾，或者用一行注释表示跳过。
+
+    //好的写法
+    switch (value) {
+        case 1:
+            /* falls through */
+        
+        case 2:
+            doSomething();
+            break;
+        
+        case 3:
+            return true;
+
+        default:
+            throw new Error("Some error");
+    }
+如果一个switch语句不包含default情况，应当用一行注释代替。
+
+    //好的写法
+    switch (value) {
+        case 1:
+            /* falls through */
+        case 2:
+            doSomething();
+            break;
+
+        case 3:
+            return true;
+
+        default:
+            //没有default
+    }
+#### **try 语句**
+try类的语句应当格式如下。
+
+    try {
+        statements
+    } catch (variable) {
+        statements
+    }
+
+    try {
+        statements
+    } catch (variable) {
+        statements
+    } finally {
+        statements
+    }
+
+## 12. 留白
