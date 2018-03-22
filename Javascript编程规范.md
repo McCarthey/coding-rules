@@ -397,3 +397,63 @@
 
 #### **if语句**
 if 语句应当是下面的格式。
+
+    if (condition) {
+        statements
+    }
+
+    if (condition) {
+        statements
+    } else {
+        statements
+    }
+
+    if (condition) {
+        statements
+    } else if (condition) {
+        statements
+    } else {
+        statements
+    }
+绝不允许在if语句中省略花括号。
+
+    //好的写法
+    if (condition) {
+        doSomething();
+    }
+
+    //不好的写法：不恰当的空格
+    if (condition){
+        doSomething();
+    }
+
+    //不好的写法：所有代码都在一行
+    if (condition) { doSomething(); }
+
+    //不好的写法：所有代码都在一行且没有花括号
+    if (condition) doSomething();
+
+#### **for语句**
+for类型的语句应当是下面的格式。
+
+    for (initialization; condition; update) {
+        statements
+    }
+
+    for (variable in object) {
+        statement
+    }
+
+for语句的初始化部分不应当有变量声明。
+
+    //好的部分
+    var i,
+        len;
+
+    for (i = 0, len = 0; i < len; i++) {
+        //code
+    }
+
+    //不好的写法：初始化时声明变量
+    
+
