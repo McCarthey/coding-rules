@@ -2,115 +2,90 @@
 
 命名风格遵循JavaScript的规范。特别是命名风格。统一了大家协作互相调用的时候才不会出现拼写错误。并且好的编程风格可以有助于写出质量更高，错误更少，易于维护的程序。使代码更清晰易懂。
 
-## 1. 缩进
-每一行的层级由4个空格组成，避免使用Tab进行缩进。
+- 缩进使用4个空格；
+- 结尾不写分号；
+- 字符串使用单引号；
+- 尽量用async/await而不用then；
+- 使用let/const而不用var，优先用const；
+- 尽量用forEach/map/filter/reduce/every/some而不用for循环；
+- 尽量用includes而不用indexOf；
+- 尽量用模板字符串而不用字符串拼接；
+- 回调使用箭头函数以免污染this；
+- 对变量进行判空，即判断是否为0/''/undefined/null/false时，都可以简单地使用 `!value` ；
+- ES6默认为严格模式，因此无需再显式写出严格模式`"use strict"`；
+- 避免使用String一类的原始包装类型创建新的对象；
+- 避免使用eval()、Function构造器、with语句；
+- 避免在字符串末尾使用斜线另起一行；
+- 避免使用科学计算法或八进制直接量表示数字；
+- Promise用bluebird版本；
+- 简单的工具函数去lodash里面找（比如数组乱序，groupBy等）
+- 数组浅拷贝使用扩展运算符`newItems = [...items]`
+- 不要手动敲空格调整格式，应该用编辑器的格式化快捷键
 
-    //好的写法
-    if (true) {
-        doSomeThing();
-    }
 
-## 2. 行的长度
-每行长度不应超过80个字符。如果一行超过80个字符，应当在一个运算符后换行。下一行应当增加两级缩进（8个字符）。
+## 一、表示语句块起首的大括号，不单独占一行
 
-    //好的写法
-    doSomething(argument1,argument2,argument3,argument4,
-            argument5);
+## 二、留白
+在逻辑相关的代码之间添加空行代码可以提高代码的可读性。
+**两行空行**仅限于在如下情况下使用：
+- 在不同的源代码文件之间。
+- 在类和接口定义之间。
 
-    //不好的写法：第二行只有4个空格
-    doSomething(argument1,argument2,argument3,argument4,
-        argument5);
+**单行空行**仅限在如下情况中使用。
+- 方法之间。
+- 方法中局部变量和第一行语句之间。
+- 方法中逻辑代码块之间以提升代码的可读性。
 
-## 3. 原始值
-**字符串** 应当始终使用双引号且保持一行，避免在字符串中使用斜线另起一行。
+**空格**应当在如下的情况下使用。
+- 关键词后跟括号的情况应当用空格隔开，匿名函数的function与圆括号之间不应有空格。
+- 参数列表中逗号之后应当保留一个空格。
+- 所有的除了点(.)之外的二元运算符，其操作数都应当用空格隔开。
+- 单目运算符的操作数之间不应该用空白隔开，例如一元减号，递增(++)，递减(--)。
+- for 语句的表达式之间应当用空格隔开。
+- 圆括号与参数之间不应有空格。
 
-**数字** 应当使用十进制整数，科学计算法表示整数，十六进制整数，或者十进制浮点小数，小数前后应当至少保留一位数字。避免使用八进制直接量。
+按照上面的规则，下面的写法都是不规范的：
+```javascript
+foo (bar)
+return(a+b)
+if(a === 0){...}
+function foo (b){...}
+function(x){...}
+for (var i=0; i<count; i++) {...}
+for ( let i = 0; i < count; i++ ) {
+    process( i )
+}
+object.method = function () {...}
+```
 
-**特殊值null** 除了下述情况下应当避免使用。
-- 用来初始化一个变量，这个变量可能被赋值为一个对象。
-- 用来和一个已经初始化的变量比较，这个变量可以是也可以不是一个对象。
-- 当函数的参数期望是对象时，被用作参数传入。
-- 当函数的返回值期望是对象时，被用作返回值传出。
+## 三、使用严格相等（ === ）和严格不相等（ !== ）
+因为“相等”运算符会自动转换变量类型，造成很多意想不到的情况：
+```javascript
+0 == "" //true
+1 == true //true
+2 == true //false
+0 == "0" //true
+false == "false" //false
+false == "0" //true
+"\t\r\n" == 0 //true
+```
 
-**特殊值undefined** 应避免使用。
+## 四、不要将赋值语句与其它语句，合并成一行
+合并条件语句和赋值语句容易造成误读。
+```javascript
+if(a = b) {...}
+```
+也不应该在同一行中赋值多个变量：
+```javascript
+let a = b = 0
+```
 
-判断一个变量是否定义应当使用 **typeof操作符** 
+## 五、避免使用全局变量
+Javascript最大的语法缺点，可能就是全局变量对于任何一个代码块，都是可读可写的。这对代码的模块化和重复使用，非常不利。
+> **如果不得不使用，用大写字母表示变量名，比如UPPER_CASE，最好使用随机字符串做变量名。**
 
-## 4. 运算符间距
-二元运算符前后必须使用一个空格来保持表达式的整洁。操作符包括**赋值运算符**和**逻辑运算符**。
 
-    //好的写法
-    for (var i = 0; i < count; i++) {
-        process(i);
-    }
-
-    //不好的写法：丢失了空格
-    for (var i=0; i<count; i++>) {
-        process(i);
-    }
-## 5. 括号间距
-当使用括号时，紧接左括号之后和紧接右括号之前不应该有空格。
-    
-    //好的写法
-    for (var i = 0; i < count; i++) {
-        process(i);
-    }
-
-    //不好的写法:参数两边有额外的空格
-    for ( var i = 0; i < count; i++ ) {
-        process( i );
-    }
-## 6. 对象直接量
-对象直接量应当有如下格式：
-- 起始左花括号应当同表达式保持同一行。
-- 每个属性的名值对应当保持一个缩进，第一个应当在左花括号后另起一行。
-- 每个属性的名值对应当使用不含引号的属性名，其后紧跟一个冒号（之前不含空格），其后是值。
-- 倘若属性值是函数类型，函数体应当在属性名之下另起一行，而且其前后均应保留一个空行。
-- 一组相关的属性前后可以插入空行以提升代码的可读性。
-- 结束的右花括号应当独占一行。
-
-        //好的写法
-        var object = {
-
-            key1: value1,
-            key2: value2,
-
-            func: function(){
-                //doSomething
-            },
-
-            key3: value3
-        };
-        
-        //不好的写法: 不恰当的缩进
-        var object = {
-                key1: value1,
-                key2: value2
-        };
-        
-        //不好的写法：函数体周围缺少空行
-        var object = {
-
-            key1: value1,
-            key2: value2,
-            func: function() {
-                //doSomething
-            },
-            key3:value3
-        }
-
-当**对象字面量最为函数参数**时，如果值是变量，起始花括号应当同函数名在同一行。所有其余先前列出的规则同样适用。
-
-    //好的写法
-    doSomething({
-        key1: value1,
-        key2: value2
-    });
-
-    //不好的写法：所有代码在一行
-    doSomething({ key1: value1, key2: value2 });
-
-## 7. 注释
+## 六、注释
 使用简洁明了的注释有助于他人理解你的代码。如下情况应当使用注释。
 - 代码晦涩难懂。
 - 可能被误认为错误的代码。
@@ -122,72 +97,46 @@
 - 独占一行的注释，用来解释下一行代码。
 - 在代码行的尾部的注释，用来解释它之前的代码。
 - 多行，用来注释掉一个代码块。
+```javascript
+// 好的写法
+if (condition) {
+    // 如果代码执行到这里，则表明通过了所有安全检查
+    allowed()
+}
 
-        //好的写法
-        if (condition) {
+if (condition) {
+// 不好的写法：错误的缩进
+    allowed()
+    //不好的写法：斜线和文字间没有空格
+    allowed()// 不好的写法：代码和注释间没有足够的空格
+}
 
-            //如果代码执行到这里，则表明通过了所有安全检查
-            allowed();
-        }
-
-        //不好的写法：注释之前没有空行
-        if (condition) {
-            //如果代码执行到这里，则表明通过了所有安全检查
-            allowed();
-        }
-
-        //不好的写法：错误的缩进
-        if (condition) {
-
-        //如果代码执行到这里，则表明通过了所有安全检查
-            allowed();
-        }
-
-        //不好的写法：应当使用多行注释
-        //这段代码进行**判断
-        //然后执行
-        if (condition) {
-
-            //如果代码执行到这里，则表明通过了所有安全检查
-            allowed();
-        }
-
-        //好的写法：在行尾注释时，代码结尾和注释间应保留一个空格
-        if (condition) {
-
-            //如果代码执行到这里，则表明通过了所有安全检查
-            allowed(); //执行**函数
-        }
-
-        //不好的写法：代码和注释间没有足够的空格
-        if (condition) {
-
-            //如果代码执行到这里，则表明通过了所有安全检查
-            allowed();//执行**函数
-        }
-
-        //好的写法：在注释掉一个代码块时，应使用单行注释，多行注释不应当使用在此种情况下。
-        // if (condition) {
-        //     allowed();//执行**函数
-        // }
+// 好的写法：在注释掉一个代码块时，应使用单行注释，多行注释不应当使用在此种情况下。
+// if (condition) {
+//     allowed() // 执行**函数
+// }
+```
 
 #### **多行注释**
-多行注释应当在代码需要更多文字去解释的时候使用。每个多行注释都至少符合以下三点：
-- 首行仅仅包括/*注释开始。该行不应当由其他文字。
-- 接下来的行以*开头并保持左对齐。这些可以有文字描述。
-- 最后一行以*/开头并同先前行保持对齐。也不应有其他文字。
+多行注释应当在代码需要更多文字去解释的时候使用。文件头部、函数和类的介绍应当用多行注释
 
-多行注释的首行应当保持同他描述代码的相同层次的缩进。后续的每行应当有同样层次的缩进并附加一个空格（为了适当保持*字符的对齐）。每一个多行代码之前应当预留一个空行。
+注释参考[JSDoc](http://www.css88.com/doc/jsdoc/index.html)语法
+```javascript
 
-    //好的写法
-    if (condition) {
-
-        /*
-        *如果代码执行到这里
-        *说明通过了所有的安全检查
-        */
-        allowed();
+    /**
+     * 函数说明
+     * @param {string|null} name 参数说明
+     * @param {number} x 参数说明
+     * @param {number?} y 选填参数说明
+     * @param {object={}} config 有默认值的选填参数说明
+     * @param {number} config.type 对象参数成员说明，枚举类型应举例标明其取值
+     * @returns {boolean} 返回值说明
+     */
+    function fooBar(name, x, y, config = {}) {
+        // code
     }
+```
+
 #### **注释声明**
 注释有时候也可以用来给一段代码声明额外的信息。这些声明的格式以单个单词打头并紧跟一个冒号。可以使用的声明如下：
 - **TODO**:说明代码还为完成。应当包含下一步要做的事。
@@ -197,559 +146,184 @@
 - **REVIEW**:说明代码有任可能的改动都需要评审。
 这些声明可能在一行或多行注释中使用，并且应当遵循同一般注释类型相同的格式规则。
 
-## 8. 命名
-变量和函数在命名时应当小心。命名应仅限于数字字母字符，某些情况下可以使用下划线(_)。最好不要在任何命名中使用($)或者反斜杠(\\)。
-**变量命名**应采用驼峰命名格式，首字母小写，每个单词首字母大写。变量名的第一个单词应当是一个名词（而非动词）以避免和函数混淆。**不要在变量中使用下划线**。
-    
-    //好的写法
-    var accountNumber = "test001";
-
-    //不好的写法：大写字母开头
-    var AccountNumber = "test001";
-
-    //不好的写法：动词开头
-    var getAccountNumber = "test001";
-
-    //不好的写法：使用下划线
-    var account_number = "test001";
-
-**函数命名**也应当采用驼峰命名格式。函数名的第一个单词应当是动词（而非名词）来避免同变量混淆。函数名中最好不要使用下划线。
-
-    //好的写法
-    function doSomething() {
-        //code
-    }
-
-    //不好的写法：大写字母开头
-    function DoSomething() {
-        //code
-    }
-
-    //不好的写法：名词开头 
-    function something() {
-        //code
-    }
-
-    //不好的写法：使用下划线
-    function do_something() {
-        //code
-    }
-
-**构造函数**————通过new运算符创建新对象的函数————也应当以驼峰格式命名，并且首字母大写。构造函数名称应当以非动词开头，因为new代表着创建一个对象实例的操作。
-
-    //好的写法
-    function MyObject() {
-        //code
-    }
-
-    //不好的写法：小写字母开头
-    function myObject() {
-        //code
-    }
-
-    //不好的写法：使用下划线
-    function my_object() {
-        //code
-    }
-
-    //不好的写法：动词开头
-    function getMyObject() {
-        //code
-    }
+## 七、命名
+变量和函数在命名应仅限于数字字母字符，采用驼峰命名格式。最好不要在任何命名中使用($)、反斜杠(\\)或下划线(_)。
+**变量命名**应当是名词，或形容词+名词短语以避免和函数混淆。
+**函数命名**应当是动词，或动宾短语来避免同变量混淆。
+**类名**和**枚举集合名**首字母大写
+```javascript
+let accountNumber = "test001"
+function getAccountNumber() {
+    // code
+}
+class DataProvider {
+	constructor() {
+		// code
+	}
+}
+const DataType = {
+	STRING: 1,
+	NUMBER: 2,
+	DATE: 3,
+}
+```
 
 **常量**（值不会被改变的变量）的命名应当是所有大写字母，不同单词之间单个下划线隔开。
+```javascript
+const TOTAL_COUNT = 10
+```
 
-    //好的写法
-    var TOTAL_COUNT = 10;
+**对象的属性**同变量的命名规则相同。对象的方法和函数的命名规则相同。
+如果每行一个属性或方法，则在最后一个属性或方法末尾加逗号。否则以后添加属性时，还需要在上一行末尾添加逗号，导致版本库中产生了多余的修改记录
+```javascript
+// 好的写法
+const people = {
+	name: 'Bob',
+	age: 12,
+}
+// 不好的写法
+const people = {name: 'Bob', age: 12,}
+```
 
-    //不好的写法：驼峰式
-    var totalCount = 10;
-
-    //不好的写法：混合形式
-    var total_COUNT = 10;
-**对象的属性**同变量的命名规则相同。对象的方法和函数的命名规则相同。如果属性或者方法是私有的，应当在之前加上一个下弧线。
-
-    //好的写法
-    var object = {
-        _count: 10,
-        _getCount: function() {
-            return this._count;
-        }
-    }
-
-## 9. 变量与函数声明
+## 八、变量与函数声明
 #### **变量声明**
-所有的变量在使用前都应该事先定义。变量定义应当放在函数开头，使用一个var关键字每行一个变量。除了首行，所有行都应当多一层缩进以使变量名能够垂直方向对齐。变量定义时应当初始化，并且赋值操作符应当保持一致的缩进。初始化的变量应当在未初始化变量之前。
+多处使用的变量尽量定义在函数开头，每行一个变量。每行都应该有let/const关键字。变量定义时尽量初始化。
+```javascript
+// 好的写法
+let count = 10
+let emptp = null
+```
 
-    //好的写法
-    var count = 10,
-        name = "jeri",
-        found = false,
-        emptp;
 #### **函数声明**
-函数应当在使用前提前定义。一个不是作为方法的函数（也就是说没有作为一个对象的属性）应当使用函数定义的额格式（不是函数表达式和Function构造器格式）。函数名和开始圆括号之间不应当有空格。结束的圆括号和右边的花括号之间应当留一个空格。右侧的花括号应当同function关键字保持用一行。开始和结束括号之间不应该有空格。参数名之间应当在逗号之后保留一个空格。函数体应当保持一级缩进。
-
-    //好的写法
-    function outer() {
-        var count = 10,
-            name = "jeri",
-            found = false,
-            empty;
-        function inner () {
-            //code
-        }
-        //调用inner()的代码
+函数声明时的空格规则如下。为了避免代码逻辑不被打散，可以先使用，后定义函数。
+```javascript
+// 好的写法
+function outer() {
+    const count = 10
+    const name = "jeri"
+    // 调用inner()的代码
+    function inner() {
+        // code
     }
-    
+}
+```
 
-**匿名函数**可能作为方法赋值给对象，或者作为其他函数的参数。function关键字同开始括号之间不应该有空格。
-
-    //好的写法
-    object.method = function() {
-        //code
-    };
-
-    //不好的写法：不正确的空格
-    object.method = function () {
-        //code
-    };
-
-
-**立即被调用的函数**应当在函数调用的外层用圆括号包裹。
-
-    //好的方法
-    var value = (function() {
-        
-        //函数体
-
-        return {
-            message:"hi"
-        }
-    }());
-
-#### **严格模式**
-严格模式应当仅限在函数内部使用，千万不要在全局使用。
-
-    //不好的写法：全局使用严格模式
-    "use strict";
-
-    function doSomething() {
-        //code
-    }
-
-    //好的写法
-    function doSomething() {
-        "use strict";
-
-        //code
-    }
-
-## 10. 运算符
-#### **赋值**
-给变量赋值时，如果右侧是含有比较语句的表达式，需要用圆括号包裹。
-
-    //好的写法
-    var flag = (i < count);
-
-    //不好的写法
-    var flag = i < count;
-#### **等号运算符**
-使用 ===（严格等于）和 !==（严格不相等）代替 ==（相等）和 !=（不等）来避免弱类型转换错误。
-
-    //好的写法
-    var same = (a === b);
-
-    //不好的写法
-    var same = (a == b);
+## 九、运算符
 #### **三元操作符**
 三元操作符应当仅仅用在条件赋值语句中，而不要作为if语句的替代品。
+```javascript
+// 好的写法
+const value = condition ? value1 : value2
 
-    //好的写法
-    var value = condition ? value1 : value2;
+// 不好的写法：没有赋值，应当使用if表达式
+condition ? doSomething() : doSomethingElse()
+```
 
-    //不好的写法：没有赋值，应当使用if表达式
-    condition ? doSomething() : doSomethingElse();
+#### **逻辑运算符**
+适当运用逻辑运算符简化判空语句，而不要作为if语句的替代品。
+```javascript
+// 好的写法
+const value = obj && obj.a && obj.a.b || 0
 
-## 11. 语句
+// 不好的写法
+let value = 0
+if (obj && obj.a && obj.a.b) {
+    value = obj.a.b;
+}
+
+// 不好的写法：没有赋值，应当使用if表达式
+value && doSomething() || doSomethingElse()
+```
+
+## 十、语句
 #### **简单语句**
-每一行最多只包含一条语句。所有简单的语句都应该以分号(;)结束。
+每一行最多只包含一条语句
 
-    //好的写法
-    count++;
-    a = b;
-    
-    //不好的写法：多个表达式写在一行
-    count++; a = b;
 #### **返回语句**
-返回语句当返回一个值的时候不应当使用圆括号包裹，除非在某些情况下这么做可以让返回值更容易理解。例如：
-
-    return;
-
-    return collection.size();
-
-    return (size > 0 ? size : defaultSize);
-#### **复合语句**
-复合语句是大括号括起来的语句列表。
-- 括起来的语句应当较复合语句多缩进一个层级。
-- 开始的大括号应当在复合语句所在行的末尾；结束的大括号应当独占一行且同复合语句的开始保持同样的缩进。
-- 当语句是控制结构的一部分时，诸如if或者for语句，所有语句都需要用大括号括起来，也包括单个语句。这个约定使得我们更当便地添加语句而不用担心忘记加括号而引起bug。
-- 像if一样的语句开始的关键词，其后应该紧跟一个空格，起始大括号应当在空格之后。
+返回语句不应当使用圆括号包裹返回值
 
 #### **if语句**
-if 语句应当是下面的格式。
+不允许在if语句中省略花括号。
+```javascript
+// 不好的写法：少了一个空格
+if (condition){
+    doSomething()
+}
 
-    if (condition) {
-        statements
-    }
+// 不好的写法：所有代码都在一行
+if (condition) { doSomething() }
 
-    if (condition) {
-        statements
-    } else {
-        statements
-    }
-
-    if (condition) {
-        statements
-    } else if (condition) {
-        statements
-    } else {
-        statements
-    }
-绝不允许在if语句中省略花括号。
-
-    //好的写法
-    if (condition) {
-        doSomething();
-    }
-
-    //不好的写法：不恰当的空格
-    if (condition){
-        doSomething();
-    }
-
-    //不好的写法：所有代码都在一行
-    if (condition) { doSomething(); }
-
-    //不好的写法：所有代码都在一行且没有花括号
-    if (condition) doSomething();
+// 不好的写法：所有代码都在一行且没有花括号
+if (condition) doSomething()
+```
 
 #### **for语句**
-for类型的语句应当是下面的格式。
+for类型的语句应当使用ES6中的let和const，避免使用var，否则循环结束后变量依然存在。
+```javascript
+// 好的写法
+for (let i = 0, len = 0; i < len; i++) {
+    // code
+}
+// 好的写法
+for (const prop in object) {
+    // code
+}
+// 不好的写法，声明和for分离
+let i, len
+for (i = 0, len = 0; i < len; i++) {
+    // code
+}
+```
 
-    for (initialization; condition; update) {
-        statements
-    }
-
-    for (variable in object) {
-        statement
-    }
-
-for语句的初始化部分不应当有变量声明。
-
-    //好的部分
-    var i,
-        len;
-
-    for (i = 0, len = 0; i < len; i++) {
-        //code
-    }
-
-    //不好的写法：初始化时声明变量
-    for (var prop in object) {
-        //code
-    }
-当使用for-in语句时，记得使用hasOwnProperty()进行双重检查来过滤对象的成员。
 #### **while 语句**
 while 类的语句应当是下面的格式。
-
-    while (condition) {
-        statement
-    }
+```javascript
+while (condition) {
+    statement
+}
+```
 #### **do 语句**
 do 类的语句应当是下面的格式。
-
-    do {
-        statements
-    } while (condition);
+```javascript
+do {
+    statements
+} while (condition)
+```
 #### **switch 语句**
-switch 类的语句应当是如下格式。
+switch下的每一组语句（除了default）都应当以break、return、throw结尾，或者用一行注释表示跳过。
+```javascript
+// 好的写法
+switch (value) {
+    case 1:
+        /* falls through */
+    case 2:
+        doSomething()
+        break;
+    case 3:
+        return true
+    default:
+        throw new Error("Some error")
+}
+```
+如果一个switch语句不包含default情况，应该保留空的default部分。
+```javascript
+// 好的写法
+switch (value) {
+    case 1:
+        return 'a'
+    case 2:
+        return 'b'
+    default:
+        // 没有default
+}
+```
 
-    switch (expression) {
-        case expression:
-            statements
-        
-        default:
-            statements
-    }
-switch下的第一个case都应当保持一个缩进。除了第一个之外包括default在内的每一个case都应当在之前保持一个空行。
-每一组语句（除了default）都应当以break、return、throw结尾，或者用一行注释表示跳过。
-
-    //好的写法
-    switch (value) {
-        case 1:
-            /* falls through */
-        
-        case 2:
-            doSomething();
-            break;
-        
-        case 3:
-            return true;
-
-        default:
-            throw new Error("Some error");
-    }
-如果一个switch语句不包含default情况，应当用一行注释代替。
-
-    //好的写法
-    switch (value) {
-        case 1:
-            /* falls through */
-        case 2:
-            doSomething();
-            break;
-
-        case 3:
-            return true;
-
-        default:
-            //没有default
-    }
 #### **try 语句**
 try类的语句应当格式如下。
-
-    try {
-        statements
-    } catch (variable) {
-        statements
-    }
-
-    try {
-        statements
-    } catch (variable) {
-        statements
-    } finally {
-        statements
-    }
-
-## 12. 留白
-在逻辑相关的代码之间添加空行代码可以提高代码的可读性。
-**两行空行**仅限于在如下情况下使用：
-- 在不同的源代码文件之间。
-- 在类和接口定义之间。
-
-**单行空行**仅限在如下情况中使用。
-- 方法之间。
-- 方法中局部变量和第一行语句之间。
-- 多行或者当行注释之前。
-- 方法中逻辑代码块之间以提升代码的可读性。
-
-**空格**应当在如下的情况下使用。
-- 关键词后跟括号的情况应当用空格隔开。
-- 参数列表中逗号之后应当保留一个空格。
-- 所有的除了点(.)之外的二元运算符，其操作数都应当用空格隔开。
-单目运算符的操作数之间不应该用空白隔开，例如一元减号，递增(++)，递减(--)。
-- for 语句的表达式之间应当用空格隔开。
-## 13. 需要避免的
-- 切勿使用像String一类的原始包装类型创建新的对象。
-- 避免使用eval()。
-- 避免使用with语句。该语句在严格模式中不复存在，可能在将来的ECMAScript标准中也将去除。
-
-
-
-以下参考自[阮一峰的博文](http://www.cnblogs.com/syfwhu/p/4814435.html)
-
-## 一、大括号的位置
-绝大多数的编程语言，都用大括号({})表示区块(block)。起首的大括号的位置，有许多不同的写法。最流行的有两种。一种是起首的大括号另起一行：
-
-    block
-    {
-        ...
-    }
-
-另一种是起首的大括号跟在关键字的后面：
-
-    block {
-        ...
-    }
-一般来说，这两种写法都可以接受。但是，Javascript要使用后一种，因为Javascript会自动添加句末的分号，导致一些难以察觉的错误。
-
-    return
-    {
-        key: value
-    };
-上面的代码的原意，是要返回一个对象，但实际上返回的是undefined，因为Javascript自动在return语句后面添加了分号。为了避免这一类错误，需要写成下面这样：
-
-    return {
-        key: value
-    };
-因此，
-> **规则1：表示区块起首的大括号，不要另起一行。**
-
-## 二、圆括号
-圆括号（parentheses）在Javascript中有两种作用，一种表示调用函数，另一种表示不同的值的组合（grouping）。我们可以用空格，区分这两种不同的括号。
-
-
-> **规则2：调用函数的时候，函数名与左括号之间没有空格。**
-
-> **规则3：函数名与参数序列之间，没有空格。**
-
-> **规则4：所有其他语法元素与左括号之间，都有一个空格。**
-
-按照上面的规则，下面的写法都是不规范的：
-
-    foo (bar)
-    return(a+b);
-    if(a === 0){...}
-    function foo (b){...}
-    function(x){...}
-## 三、分号
-分号表示语句的结束。大多数情况下，如果你省略了句为的分号，Javascript会自动添加。
-
-    var a = 1
-等同于
-
-    var a = 1;
-因此，有人提倡省略句尾的分号。但麻烦的是，如果下一行的第一个字元（token）是下面这五个字符之一，Javascript将不对上一行句尾添加分号：“(”、“[”、“/”、“+”和“-”。
-
-    x = y
-    (function(){
-        ...
-    })();
-上面的代码等同于
-
-    x = y(function(){
-        ...
-    })();
-因此，
-> **规则5：不要省略句末的分号。**
-## 四、with语句
-with可以减少代码的书写，但是会造成混淆。
-
-    with(o) {
-        foo = bar;
-    }
-上面的代码，可以有四种运行结果：
-
-    o.foo = bar;
-    o.foo = o.bar;
-    foo = bar;
-    foo = o.bar;
-这四种结果都可能发生，取决于不同的变量是否有定义。因此，
-> **规则6：不要使用with语句。**
-## 五、相等和严格相等
-Javascript有两个表示“相等”的运算符：“相等”（==）和“严格相等”（===）。
-因为“相等”运算符会自动转换变量类型，造成很多意想不到的情况：
-
-    0 == "" //true
-    1 == true //true
-    2 == true //false
-    0 == "0" //true
-    false == "false" //false
-    false == "0" //true
-    "\t\r\n" == 0 //true
-因此，
-> **规则7：不要使用“相等”（==）运算符，只使用“严格相等”（===）运算符。**
-## 六、语句的合并
-有些程序员追求简洁，喜欢合并不同目的的语句。比如，原来的语句是
-
-    a = b;
-    if(a) {...}
-他喜欢写成下面这样：
-
-    if(a = b) {...}
-虽然语句少了一行，但是可读性大打折扣，而且会造成误读，让别人误认为这行代码的意思是：
-
-    if(a === b) {...}
-另外一种情况是，有些程序员喜欢在同一行中赋值多个变量：
-
-    var a = b = 0;
-他以为，这行代码等同于
-
-    var a = 0, b = 0;
-实际上不是，它的真正效果是下面这样：
-
-    b = 0;
-
-    var a = b;
-因此，
-> **规则8：不要将不同目的的语句，合并成一行。**
-## 七、变量声明
-Javascript会自动将变量声明“提升”（hoist）到代码块（block）的头部。
-
-    if(!o){
-        var o = {};
-    }
-等同于
-
-    var o;
-    if(!o){
-        o = {};
-    }
-为了比避免可能出现的问题，不如把变量声明都放在代码块的头部。
-
-    for(var i ...){...}
-最好写出
-
-    var i;
-
-    for(i ...){...}
-因此，
-> **规则9：所有变量声明都放在函数的头部。**
-> **规则10：所有函数都在使用之前定义。**
-## 八、全局变量
-Javascript最大的语法缺点，可能就是全局变量对于任何一个代码块，都是可读可写的。这对代码的模块化和重复使用，非常不利。
-> **规则11：避免使用全局变量；如果不得不使用，用大写字母表示变量名，比如UPPER_CASE。**
-## 九、new命令
-Javascript使用new命令，从构建函数生成一个新对象。
-
-    var o = new myObject();
-这种做法的问题是，一旦你忘了加上new，myObject()内部的this关键字就会指向全局对象，导致所有绑定在this上面的变量，都变成全局变量。
-> **规则12：不要使用new命令，改用Object.create()命令。**
-
-如果不得不使用new，为了防止出错，最好在视觉上吧构建函数与其他函数区分开来。
-> **规则13：构建函数的函数名，采用首字母大写（InitialCap）；其他函数名，一律首字母小写。**
-## 十、自增和自减运算符
-自增（++）和自减（--）运算符，放在变量的前面或后面，返回的值不一样，很容易发生错误。
-
-事实上，所有的++运算符都可以用“+= 1”代替。
-
-    ++x;
-等同于
-
-    x += 1;
-代码变得更清晰了。有一个很可笑的例子，某个Javascript函数库的源代码中出现了下面的片段：
-
-    ++x;
-    ++x;
-这个程序员忘了，还有更简单、更合
-    ++x;
-这个程序员忘了，还有更简单、更合理的写法：
-
-    x += 2;
-因此，
-> **规则14：不要使用自增（++）和自减（--）运算符，用 += 和 -= 代替。**
-## 十一、区块
-如果循环和判断的代码体只有一行，Javascript允许该区块（block）省略大括号。
-下面的代码
-
-    if(a) b(); c();
-原意可能是
-
-    if(a) { b(); c();}
-但是，实际效果是
-
-    if(a) {b();} c();
-因此，
-> **规则15：总是使用大括号表示区块。**
-
-
-## 其他
-有些风格在js开发者之间都没统一。我们的选择是这样：
-- 结尾不写分号；
-- 尽量用async/await而不用then；
-- 尽量用forEach/map/filter/reduce而不用for循环；
-- Promise用bluebird版本；
-- 简单的工具函数去lodash里面找（比如数组乱序，groupBy等）
-
-## （完）
+```javascript
+try {
+    statements
+} catch (variable) {
+    statements
+}
+```
